@@ -26,8 +26,7 @@ Specifying .any means that it can be a front camera or a back camera.-->
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.Forrest">
+        android:supportsRtl="true">
         <activity
             android:name=".ui.MainActivity"
             android:exported="true" >
