@@ -8,14 +8,14 @@ import androidx.core.app.NotificationManagerCompat
 import run.forrest.ui.MainActivity
 import run.forrest.R
 
-class Notifications(private val context: Context) {
+class Notifications(private val context: Context, private val channelName: String) {
 
     // region Constants
 
-    private val CHANNEL_ID = ((System.currentTimeMillis() / 1000L).toInt() % Integer.MAX_VALUE).toString()
-    private val CHANNEL_NAME = "Foreground Service"
+//    private val CHANNEL_ID = "Foreground Service"
+//    private val CHANNEL_NAME = "Foreground Service"
     private val NOTIFICATION_CONTENT_TITLE = "Have a nice day"
-    private val DEFAULT_NOTIFICATION_ID = 1
+    private val notificationId = (System.currentTimeMillis() / 1000L).toInt() % Integer.MAX_VALUE
 
     // endregion
 
@@ -31,15 +31,15 @@ class Notifications(private val context: Context) {
 
         with(NotificationManagerCompat.from(context)) {
 
-            // notificationId is a unique int for each notification that you must define
-            notify(DEFAULT_NOTIFICATION_ID, notificationBuilder.build())
+            // Notification id is a unique int for each notification that you must define
+            notify(notificationId, notificationBuilder.build())
         }
     }
 
     fun showForegroundNotification(service: Service){
 
         // Start foreground with foreground notification.
-        service.startForeground(DEFAULT_NOTIFICATION_ID, notificationBuilder.build())
+        service.startForeground(notificationId, notificationBuilder.build())
     }
 
     fun updateNotification(notificationTitle: String){
@@ -49,7 +49,7 @@ class Notifications(private val context: Context) {
         with(NotificationManagerCompat.from(context)) {
 
             // notificationId is a unique int for each notification that you must define
-            notify(DEFAULT_NOTIFICATION_ID, notificationBuilder.build())
+            notify(notificationId, notificationBuilder.build())
         }
     }
 
@@ -63,10 +63,10 @@ class Notifications(private val context: Context) {
     private fun buildNotification(): NotificationCompat.Builder {
 
         // Create notification channel.
-        createNotificationChannel(CHANNEL_NAME)
+        createNotificationChannel(channelName)
 
         // Create the notification.
-        val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+        val notificationBuilder = NotificationCompat.Builder(context, channelName)
 
         // Only the first time the notification appears and not for later updates.
         notificationBuilder.setOnlyAlertOnce(true)
@@ -88,7 +88,7 @@ class Notifications(private val context: Context) {
 
         // Create notification channel.
         val notificationChannel =
-            NotificationChannel(CHANNEL_ID, channelName, importance)
+            NotificationChannel(channelName, channelName, importance)
 
         // Create notification manager and register the channel with the system.
         val notificationManager: NotificationManager =

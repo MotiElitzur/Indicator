@@ -47,7 +47,7 @@ class Forrest : Service(){
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        foregroundNotification = Notifications(this)
+        foregroundNotification = Notifications(this, "Foreground Service")
         foregroundNotification?.showForegroundNotification(this)
 
 //        startUpdateNotification()
