@@ -2,8 +2,11 @@ package moti.indicator
 
 import android.app.Application
 import android.content.Context
+import run.forrest.ServiceHelper
 import run.forrest.service.Forrest
 import run.forrest.service.run
+
+
 import run.forrest.utils.Logger
 
 class App: Application() {
@@ -29,6 +32,9 @@ class App: Application() {
         instance = this
 
         Logger.d("App create")
+
+//        ServiceHelper(applicationContext).uu("bla bla").run()
+
         Forrest().setNotificationTitle("bla").run(applicationContext)
     }
 }

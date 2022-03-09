@@ -8,14 +8,13 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
-import run.forrest.App
 import run.forrest.utils.Notifications
 import run.forrest.utils.Utils
 
 /**
  * The on going service.
  */
-class Forrest() : Service(){
+class Forrest : Service(){
 
     // region constants
 
@@ -31,7 +30,6 @@ class Forrest() : Service(){
     private val notificationHandler = Handler(Looper.getMainLooper())
 
     private val serviceStartTime: Long = System.currentTimeMillis()
-
 
     // endregion
 
@@ -52,7 +50,7 @@ class Forrest() : Service(){
         foregroundNotification = Notifications(this)
         foregroundNotification?.showForegroundNotification(this)
 
-        startUpdateNotification()
+//        startUpdateNotification()
 
         return START_STICKY
     }
@@ -104,6 +102,24 @@ class Forrest() : Service(){
 
     // endregion
 
+    // region Public Methods
+
+    fun stopUpdateNotification() {
+
+        // Clear the notification handler.
+        notificationHandler.removeCallbacksAndMessages(null)
+    }
+
+    fun setNotificationTitle(notificationTitle: String): Forrest {
+
+        // Update Notification.
+        foregroundNotification?.updateNotification(notificationTitle)
+
+        return this
+    }
+
+    // endregion
+
     // region Private Methods
 
     private fun startUpdateNotification() {
@@ -128,17 +144,6 @@ class Forrest() : Service(){
 
         // Trigger first time.
         notificationHandler.post(notificationRunnable)
-    }
-
-    fun stopUpdateNotification() {
-
-        // Clear the notification handler.
-        notificationHandler.removeCallbacksAndMessages(null)
-    }
-
-    fun setNotificationTitle(s: String): Forrest {
-
-        return this
     }
 }
 

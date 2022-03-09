@@ -63,7 +63,7 @@ class Notifications(private val context: Context) {
     private fun buildNotification(): NotificationCompat.Builder {
 
         // Create notification channel.
-        createNotificationChannel()
+        createNotificationChannel(CHANNEL_NAME)
 
         // Create the notification.
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -84,11 +84,11 @@ class Notifications(private val context: Context) {
     /**
      * Create a notification channel - Android system request.
      */
-    private fun createNotificationChannel() {
+    private fun createNotificationChannel(channelName:String, importance: Int = NotificationManager.IMPORTANCE_NONE) {
 
         // Create notification channel.
         val notificationChannel =
-            NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_NONE)
+            NotificationChannel(CHANNEL_ID, channelName, importance)
 
         // Create notification manager and register the channel with the system.
         val notificationManager: NotificationManager =
