@@ -12,7 +12,7 @@ class Notifications(private val context: Context) {
 
     // region Constants
 
-    private val CHANNEL_ID = "run.forrest"
+    private val CHANNEL_ID = ((System.currentTimeMillis() / 1000L).toInt() % Integer.MAX_VALUE).toString()
     private val CHANNEL_NAME = "Foreground Service"
     private val NOTIFICATION_CONTENT_TITLE = "Have a nice day"
     private val DEFAULT_NOTIFICATION_ID = 1
