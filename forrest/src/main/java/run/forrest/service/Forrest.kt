@@ -1,18 +1,21 @@
 package run.forrest.service
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
+import androidx.core.content.ContextCompat
+import run.forrest.App
 import run.forrest.utils.Notifications
 import run.forrest.utils.Utils
 
 /**
  * The on going service.
  */
-class ForrestService : Service(){
+class Forrest() : Service(){
 
     // region constants
 
@@ -28,6 +31,7 @@ class ForrestService : Service(){
     private val notificationHandler = Handler(Looper.getMainLooper())
 
     private val serviceStartTime: Long = System.currentTimeMillis()
+
 
     // endregion
 
@@ -115,7 +119,7 @@ class ForrestService : Service(){
                 // Update Notification.
                 foregroundNotification?.updateNotification(timeThatPass)
 
-                Log.e("Forrest", "Moti Still Runing")
+                Log.e("Forrest", "Moti Still Running")
 
                 // Set the handler to repeat this runnable task every x millis.
                 notificationHandler.postDelayed(this, UPDATE_NOTIFICATION_MILLISECONDS)
@@ -129,6 +133,16 @@ class ForrestService : Service(){
     fun stopUpdateNotification() {
 
         // Clear the notification handler.
-        notificationHandler.removeCallbacksAndMessages(null);
+        notificationHandler.removeCallbacksAndMessages(null)
     }
+
+    fun setNotificationTitle(s: String): Forrest {
+
+        return this
+    }
+}
+
+fun Forrest.run(context: Context) {
+
+    ContextCompat.startForegroundService(context, Intent(context, Forrest::class.java))
 }

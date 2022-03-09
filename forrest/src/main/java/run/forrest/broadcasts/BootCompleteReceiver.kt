@@ -3,8 +3,7 @@ package run.forrest.broadcasts
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
-import run.forrest.service.ForrestService
+import run.forrest.service.Forrest
 
 class BootCompleteReceiver : BroadcastReceiver() {
 
@@ -14,7 +13,7 @@ class BootCompleteReceiver : BroadcastReceiver() {
         if(intent.action.equals(Intent.ACTION_BOOT_COMPLETED)){
 
             // Start forrest service.
-            context.startForegroundService(Intent(context, ForrestService::class.java))
+            context.startForegroundService(Intent(context, Forrest::class.java))
         }
     }
 }

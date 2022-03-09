@@ -6,7 +6,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import run.forrest.service.ForrestService
+import run.forrest.service.Forrest
 
 class App : Application(), DefaultLifecycleObserver {
 
@@ -30,7 +30,7 @@ class App : Application(), DefaultLifecycleObserver {
         super<Application>.onCreate()
         instance = this
 
-        startForrestService()
+//        startForrestService()
     }
 
     /**
@@ -47,8 +47,8 @@ class App : Application(), DefaultLifecycleObserver {
         super.onStop(owner)
     }
 
-    fun startForrestService() {
-        startForegroundService(Intent(this, ForrestService().javaClass))
-        Log.e("Forrest","All Over Again")
-    }
+//    fun startForrestService() {
+//        startForegroundService(Intent(this, Forrest().javaClass))
+//        Log.e("Forrest","All Over Again")
+//    }
 }
