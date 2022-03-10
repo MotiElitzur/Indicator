@@ -53,6 +53,15 @@ class Notifications(private val context: Context, private val channelName: Strin
         }
     }
 
+    /**
+     * send activity like this - MainActivity::class.java
+     */
+    fun openActivity(activityClass: Class<*>?){
+
+        // Set an intent to open activity when notification pressed.
+        notificationBuilder.setContentIntent(getActivityIntent(activityClass))
+    }
+
     // endregion
 
     // region Private Methods
