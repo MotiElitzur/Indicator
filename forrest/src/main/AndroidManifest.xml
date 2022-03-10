@@ -45,7 +45,7 @@ Specifying .any means that it can be a front camera or a back camera.-->
         </receiver>
 
         <!-- On Going Service-->
-        <service android:name=".service.Forrest"/>
+        <service android:name=".service.ForrestService"/>
 
         <receiver
             android:name=".broadcasts.RestartForrestReceiver"
