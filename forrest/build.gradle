@@ -44,6 +44,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    // Shared Preferences
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+
     // Life Cycle Observer.
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
@@ -64,11 +67,11 @@ dependencies {
     // If you want to additionally use the CameraX Lifecycle library
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
     // If you want to additionally use the CameraX VideoCapture library
-    implementation "androidx.camera:camera-video:1.1.0-beta01"
+    implementation "androidx.camera:camera-video:1.1.0-beta02"
     // If you want to additionally use the CameraX View class
-    implementation "androidx.camera:camera-view:1.1.0-beta01"
+    implementation "androidx.camera:camera-view:1.1.0-beta02"
     // If you want to additionally use the CameraX Extensions library
-    implementation "androidx.camera:camera-extensions:1.1.0-beta01"
+    implementation "androidx.camera:camera-extensions:1.1.0-beta02"
 
     // endregion
 }

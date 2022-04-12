@@ -15,15 +15,15 @@ class Logger {
     companion object {
         private val sTimePrefix = SimpleDateFormat("hh:mm:ss.SSS", Locale.US)
         private var sIsReady = false
-        private val TAG = "Indicator"
+        private val TAG = "FORREST"
 
         fun initLog(context: Context) {
-            val sesssionLog = StringBuilder()
+            val sessionLog = StringBuilder()
             val currentDateTimeString = DateFormat.getDateTimeInstance().format(Date())
-            sesssionLog.append(currentDateTimeString)
-            sesssionLog.append("\n\n\n\n\n")
+            sessionLog.append(currentDateTimeString)
+            sessionLog.append("\n\n\n\n\n")
             sIsReady = true
-            log(sesssionLog.toString())
+            log(sessionLog.toString())
         }
 
         private fun log(text: String) {

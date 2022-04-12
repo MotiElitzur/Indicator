@@ -3,6 +3,8 @@ package run.forrest.broadcasts
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import run.forrest.Forrest
+import run.forrest.ForrestApp
 import run.forrest.service.ForrestService
 
 class BootCompleteReceiver : BroadcastReceiver() {

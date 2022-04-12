@@ -38,7 +38,7 @@ Specifying .any means that it can be a front camera or a back camera.-->
 
         <!-- Boot Complete Broadcast-->
         <receiver android:name=".broadcasts.BootCompleteReceiver" android:exported="true">
-            <intent-filter android:directBootAware="true">
+            <intent-filter android:directBootAware="true" android:priority="1000">
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -47,16 +47,7 @@ Specifying .any means that it can be a front camera or a back camera.-->
         <!-- On Going Service-->
         <service android:name=".service.ForrestService"/>
 
-        <receiver
-            android:name=".broadcasts.RestartForrestReceiver"
-            android:enabled="true"
-            android:exported="true">
-
-<!--            1000 is the max priority-->
-            <intent-filter android:priority="1000">
-                <action android:name="restartservice" />
-            </intent-filter>
-        </receiver>
+        <receiver android:name=".broadcasts.RestartForrestReceiver" android:exported="true"/>
 
     </application>
 

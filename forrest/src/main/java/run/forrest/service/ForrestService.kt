@@ -4,51 +4,34 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import android.util.Log
-import org.greenrobot.eventbus.EventBus
 import run.forrest.utils.Logger
 import run.forrest.utils.Notifications
-import run.forrest.utils.OnForrestServiceStart
 import run.forrest.utils.Utils
-import java.util.*
-
 
 /**
  * The on going service.
  */
 class ForrestService : Service() {
 
-    //Instance of inner class created to provide access  to public methods in this class
-    private val forrestBinder: ForrestServiceBinder = ForrestServiceBinder()
-
-    /**
-     * Class used for the client Binder.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with IPC.
-     */
-    inner class ForrestServiceBinder : Binder() {
-        val service: ForrestService
-            get() = this@ForrestService
-    }
-
-    // region constants
-
-    // Update Notification every 1 second (Max that can be).
-    private val UPDATE_NOTIFICATION_MILLISECONDS: Long = 1000
-
-    // endregion
-
     // region Data Members
 
-    private var foregroundNotification: Notifications? = null
+    // Update Notification every 1 second (Max that can be).
+//    private val UPDATE_NOTIFICATION_MILLISECONDS: Long = 1000
 
-    private val notificationHandler = Handler(Looper.getMainLooper())
+    // Service notification.
+//    private val notificationHandler = Handler(Looper.getMainLooper())
 
-    private val serviceStartTime: Long = System.currentTimeMillis()
+    // Service start time.
+//    private val serviceStartTime: Long = System.currentTimeMillis()
 
-    var channelName: String = "Foreground Service"
+//    var channelName: String = "Foreground Service"
+
+    var serviceNotification: Notifications? = null
+
+    // Instance of inner class created to provide access  to public methods in this class
+    private val forrestBinder: ForrestServiceBinder = ForrestServiceBinder()
 
     // endregion
 
@@ -59,7 +42,7 @@ class ForrestService : Service() {
      */
     override fun onCreate() {
         super.onCreate()
-        Logger.d("forrest onCreate")
+        Logger.d("service created")
     }
 
     /**
@@ -67,8 +50,10 @@ class ForrestService : Service() {
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        foregroundNotification = Notifications(this, channelName)
-        foregroundNotification?.showForegroundNotification(this)
+        serviceNotification = Notifications(this, "Foreground Service")
+        serviceNotification?.showForegroundNotification(this)
+
+        Logger.d("service start command")
 
         return START_STICKY
     }
@@ -77,7 +62,6 @@ class ForrestService : Service() {
      * A client is binding to the service with bindService().
      */
     override fun onBind(intent: Intent?): IBinder {
-
         return forrestBinder
     }
 
@@ -108,13 +92,40 @@ class ForrestService : Service() {
      */
     override fun onDestroy() {
         super.onDestroy()
+        Logger.d("service destroyed")
 
-        // Stop Updating notification.
-        stopUpdateNotification()
-
-        // Restart Service.
-        restartService()
+//
+//        // Stop Updating notification.
+//        stopUpdateNotification()
+//
+//        // Restart Service.
+//        restartService()
     }
+
+    // endregion
+
+    // region Public Methods
+
+//    fun stopUpdateNotification() {
+//
+//        // Clear the notification handler.
+//        notificationHandler.removeCallbacksAndMessages(null)
+//    }
+//
+//    fun setNotificationTitle(notificationTitle: String): ForrestService {
+//
+//        Logger.d("is foregroundNotification null - ${foregroundNotification == null}")
+//        channelName = notificationTitle
+//
+//        // Update Notification.
+//        foregroundNotification?.updateNotification(notificationTitle)
+//
+//        return this
+//    }
+
+    // endregion
+
+    // region Private Methods
 
     private fun restartService() {
 
@@ -125,54 +136,44 @@ class ForrestService : Service() {
         }
     }
 
+//    private fun startUpdateNotification() {
+//
+//        // Create notification runnable.
+//        val notificationRunnable: Runnable = object : Runnable {
+//            override fun run() {
+//
+//                // Get time that pass in string.
+//                val timeThatPass =
+//                    Utils.convertMillisecondsToTime(System.currentTimeMillis() - serviceStartTime)
+//
+//                // Update Notification.
+//                foregroundNotification?.updateNotification(timeThatPass)
+//
+//                Log.e("Forrest", "Moti Still Running")
+//
+//                // Set the handler to repeat this runnable task every x millis.
+//                notificationHandler.postDelayed(this, UPDATE_NOTIFICATION_MILLISECONDS)
+//            }
+//        }
+//
+//        // Trigger first time.
+//        notificationHandler.post(notificationRunnable)
+//    }
+
     // endregion
 
-    // region Public Methods
+    // region Service Binder
 
-    fun stopUpdateNotification() {
-
-        // Clear the notification handler.
-        notificationHandler.removeCallbacksAndMessages(null)
-    }
-
-    fun setNotificationTitle(notificationTitle: String): ForrestService {
-
-        Logger.d("is foregroundNotification null - ${foregroundNotification == null}")
-        channelName = notificationTitle
-
-        // Update Notification.
-        foregroundNotification?.updateNotification(notificationTitle)
-
-        return this
+    /**
+     * Class used for the client Binder.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with IPC.
+     */
+    inner class ForrestServiceBinder : Binder() {
+        val service: ForrestService
+            get() = this@ForrestService
     }
 
     // endregion
-
-    // region Private Methods
-
-    private fun startUpdateNotification() {
-
-        // Create notification runnable.
-        val notificationRunnable: Runnable = object : Runnable {
-            override fun run() {
-
-                // Get time that pass in string.
-                val timeThatPass =
-                    Utils.convertMillisecondsToTime(System.currentTimeMillis() - serviceStartTime)
-
-                // Update Notification.
-                foregroundNotification?.updateNotification(timeThatPass)
-
-                Log.e("Forrest", "Moti Still Running")
-
-                // Set the handler to repeat this runnable task every x millis.
-                notificationHandler.postDelayed(this, UPDATE_NOTIFICATION_MILLISECONDS)
-            }
-        }
-
-        // Trigger first time.
-        notificationHandler.post(notificationRunnable)
-    }
 }
 
 fun ForrestService.run(context: Context): ForrestService {

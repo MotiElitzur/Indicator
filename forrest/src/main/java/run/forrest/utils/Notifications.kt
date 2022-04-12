@@ -44,11 +44,13 @@ class Notifications(private val context: Context, private val channelName: Strin
 
     fun updateNotification(notificationTitle: String){
 
+        Logger.d("Update notification title $notificationTitle")
+
         notificationBuilder.setContentTitle(notificationTitle)
 
         with(NotificationManagerCompat.from(context)) {
 
-            // notificationId is a unique int for each notification that you must define
+            // notificationId is a unique int for each notification that you must define.
             notify(notificationId, notificationBuilder.build())
         }
     }
@@ -118,6 +120,19 @@ class Notifications(private val context: Context, private val channelName: Strin
         }
 
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+    }
+
+    /**
+     * Create an broadcast intent to open when notification pressed.
+     */
+    private fun getBroadcastIntent(broadcastClass: Class<*>?, intentName: String, intentExtra: String): PendingIntent? {
+
+        // Create an explicit intent for an Activity in your app
+        val intent = Intent(context, broadcastClass).apply {
+            putExtra(intentName, intentExtra)
+        }
+
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 
     // endregion
