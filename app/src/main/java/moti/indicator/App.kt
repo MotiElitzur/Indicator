@@ -4,6 +4,7 @@ package moti.indicator
 import run.forrest.Forrest
 import run.forrest.service.ForrestService
 import run.forrest.utils.Logger
+import run.forrest.utils.Notifications
 
 class App : Forrest() {
 
@@ -36,6 +37,6 @@ class App : Forrest() {
 
         Logger.d("App - onForrestConnected")
 
-        forrestService.serviceNotification?.updateNotification("326")
+        forrestService.serviceNotification?.updateNotification("326", MainActivity::class.java)
     }
 }

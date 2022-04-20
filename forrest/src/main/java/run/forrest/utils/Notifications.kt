@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import run.forrest.ui.MainActivity
 import run.forrest.R
 
 class Notifications(private val context: Context, private val channelName: String) {
@@ -15,38 +14,45 @@ class Notifications(private val context: Context, private val channelName: Strin
 //    private val CHANNEL_ID = "Foreground Service"
 //    private val CHANNEL_NAME = "Foreground Service"
     private val NOTIFICATION_CONTENT_TITLE = "Have a nice day"
-    private val notificationId = (System.currentTimeMillis() / 1000L).toInt() % Integer.MAX_VALUE
+    private val notificationId = (System.currentTimeMillis() % Integer.MAX_VALUE).toInt()
 
     // endregion
 
     // region Data Members
 
-    private var notificationBuilder: NotificationCompat.Builder = buildNotification()
+    private var notificationBuilder: NotificationCompat.Builder = buildNotification(NOTIFICATION_CONTENT_TITLE)
 
     // endregion
 
     // region Public Methods
 
-    fun showNotification(){
+    fun showNotification(activityToOpen: Class<*>? = null){
+
+        Logger.d("showNotification notificationId - $notificationId")
+
+        if (activityToOpen != null) openActivity(activityToOpen)
 
         with(NotificationManagerCompat.from(context)) {
 
-            // Notification id is a unique int for each notification that you must define
+            // Notification id is a unique int for each notification that you must define.
             notify(notificationId, notificationBuilder.build())
         }
     }
 
     fun showForegroundNotification(service: Service){
 
+        Logger.d("showForegroundNotification notificationId - $notificationId")
+
         // Start foreground with foreground notification.
         service.startForeground(notificationId, notificationBuilder.build())
     }
 
-    fun updateNotification(notificationTitle: String){
+    fun updateNotification(notificationTitle: String, activityToOpen: Class<*>? = null){
 
         Logger.d("Update notification title $notificationTitle")
 
         notificationBuilder.setContentTitle(notificationTitle)
+        if (activityToOpen != null) openActivity(activityToOpen)
 
         with(NotificationManagerCompat.from(context)) {
 
@@ -58,10 +64,10 @@ class Notifications(private val context: Context, private val channelName: Strin
     /**
      * send activity like this - MainActivity::class.java
      */
-    fun openActivity(activityClass: Class<*>?){
+    fun openActivity(activityToOpen: Class<*>){
 
         // Set an intent to open activity when notification pressed.
-        notificationBuilder.setContentIntent(getActivityIntent(activityClass))
+        notificationBuilder.setContentIntent(getActivityIntent(activityToOpen))
     }
 
     // endregion
@@ -71,7 +77,7 @@ class Notifications(private val context: Context, private val channelName: Strin
     /**
      * Create a notification builder.
      */
-    private fun buildNotification(): NotificationCompat.Builder {
+    private fun buildNotification(notificationTitle: String): NotificationCompat.Builder {
 
         // Create notification channel.
         createNotificationChannel(channelName)
@@ -84,10 +90,10 @@ class Notifications(private val context: Context, private val channelName: Strin
 
         // Must to set icon for title will work.
         notificationBuilder.setSmallIcon(R.drawable.ic_launcher_foreground)
-        notificationBuilder.setContentTitle(NOTIFICATION_CONTENT_TITLE)
+        notificationBuilder.setContentTitle(notificationTitle)
 
         // Set an intent to open activity when notification pressed.
-        notificationBuilder.setContentIntent(getActivityIntent(MainActivity::class.java))
+        notificationBuilder.setContentIntent(getActivityIntent())
 
         return notificationBuilder
     }
@@ -95,7 +101,7 @@ class Notifications(private val context: Context, private val channelName: Strin
     /**
      * Create a notification channel - Android system request.
      */
-    private fun createNotificationChannel(channelName:String, importance: Int = NotificationManager.IMPORTANCE_NONE) {
+    private fun createNotificationChannel(channelName:String, importance: Int = NotificationManager.IMPORTANCE_MIN) {
 
         // Create notification channel.
         val notificationChannel =
@@ -112,14 +118,16 @@ class Notifications(private val context: Context, private val channelName: Strin
     /**
      * Create an activity intent to open when notification pressed.
      */
-    private fun getActivityIntent(activityClass: Class<*>?): PendingIntent? {
+    private fun getActivityIntent(activityClass: Class<*>? = null): PendingIntent? {
 
         // Create an explicit intent for an Activity in your app
-        val intent = Intent(context, activityClass).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
+        val activityIntent = if (activityClass != null)
+            Intent(context, activityClass).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        else Intent()
 
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        return PendingIntent.getActivity(context, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE)
     }
 
     /**
